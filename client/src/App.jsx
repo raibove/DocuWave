@@ -1,25 +1,54 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import landingBg from './assets/landing-bg.svg';
 import './App.css'
-import logo from './assets/logo-full.png';
+import { AuthProvider } from "@pangeacyber/react-auth";
+import { useNavigate } from 'react-router-dom';
+
+import { Routes, Route } from "react-router-dom"
+import { Landing } from './pages/landing';
+
+const LOGIN_URL = import.meta.env.VITE_LOGIN_URL || "";
+const CLIENT_TOKEN = import.meta.env.VITE_CLIENT_TOKEN || "";
+const PANGEA_DOMAIN = import.meta.env.VITE_PANGEA_DOMAIN || "";
+
 
 function App() {
+
+  const navigate = useNavigate();
+  const authConfig = {
+    clientToken: CLIENT_TOKEN,
+    domain: PANGEA_DOMAIN,
+  };
+
+  const handleLogin = (appData) => {
+    navigate(appData.returnPath);
+  };
+
+  if (!authConfig.clientToken || !authConfig.domain) {
+    return (
+      <h2>
+        Please configure your environment variables.
+      </h2>
+    );
+  }
   return (
-    <div className='landing'>
-    <div className='header'>
-      <img src={logo} className='logo' alt="DocuWave"/>
-    </div>
-    <div className='landing-content'>
-      <p className='landing-tag'>Create. Secure. Share</p>
-      <p className='landing-tagline'>With Docuwave create or upload new documents, share it with users all securly</p>
-      <button>Get Started</button>
-    </div>
-    <div className='bg-con'>
-      <img src={landingBg} alt='bg' className='bg-img'/>
-      </div>
-    </div>
+    <AuthProvider
+      config={{
+        domain: PANGEA_DOMAIN,
+        clientToken: CLIENT_TOKEN,
+        useJwt: true
+      }}
+      cookieOptions={{
+        useCookie: true,
+        cookieName: "docuwave-pangea"
+      }}
+      onLogin={handleLogin}
+      loginUrl={LOGIN_URL}
+    // useStrictStateCheck={false}
+    >
+      <Routes>
+        <Route path='/' element={<Landing />}></Route>
+      </Routes>
+    </AuthProvider>
   )
 }
 
