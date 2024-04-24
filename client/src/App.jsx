@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 
 import { Routes, Route } from "react-router-dom"
 import { Landing } from './pages/landing';
+import ProtectedRoute from './component/protected-route';
+import Dashboard from './pages/dashboard';
 
 const LOGIN_URL = import.meta.env.VITE_LOGIN_URL || "";
 const CLIENT_TOKEN = import.meta.env.VITE_CLIENT_TOKEN || "";
@@ -47,6 +49,9 @@ function App() {
     >
       <Routes>
         <Route path='/' element={<Landing />}></Route>
+        <Route element={<ProtectedRoute/>}>
+          <Route element={<Dashboard />} path='/dashboard' />
+        </Route>
       </Routes>
     </AuthProvider>
   )

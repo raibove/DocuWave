@@ -10,7 +10,7 @@ export const Landing = () => {
   const handleGetStarted = () => {
     console.log(authenticated)
     if (authenticated) {
-      navigate('/home')
+      navigate('/dashboard')
     } else {
       login();
     }
